@@ -1,0 +1,62 @@
+{
+  "name": "snip-notes",
+  "displayName": "Snip Notes",
+  "description": "Note taking for vs-code",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.81.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./src/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "snipNotesView",
+          "title": "Snip Notes",
+          "icon": "resources/small-diamond.svg"
+        }
+      ]
+    },
+    "views": {
+      "snipNotesView": [
+        {
+          "type": "webview",
+          "id": "snipNotesView",
+          "name": "Snip Notes"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "snip-notes.initTables",
+        "title": "Init Tables"
+      },
+      {
+        "command": "snip-notes.createNote",
+        "title": "Create Note"
+      }
+    ]
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "pretest": "npm run lint",
+    "test": "node ./test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.1",
+    "@types/node": "16.x",
+    "@types/vscode": "^1.81.0",
+    "@vscode/test-electron": "^2.3.4",
+    "eslint": "^8.47.0",
+    "glob": "^10.3.3",
+    "mocha": "^10.2.0",
+    "typescript": "^5.1.6"
+  },
+  "dependencies": {
+    "sql.js": "^1.8.0"
+  }
+}
