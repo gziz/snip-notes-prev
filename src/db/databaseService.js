@@ -5,7 +5,7 @@ const path = require('path');
 
 let SQL;
 let dbInstance;
-let dbFilePath = path.join( __dirname, "..", "..", 'mydb.sqlite');
+let dbFilePath = path.join( __dirname, '../../snip-notes.sqlite');
 
 async function initializeSQLJs() {
     if (!SQL) {
@@ -138,10 +138,10 @@ function getAllFileNotes(fileId) {
     return rows;
 }
 
-function updateNoteContent(id, newContent) {
+function updateNote(newNote) {
     const db = loadDatabase();
-    const stmt = db.prepare("UPDATE notes SET content = ? WHERE id = ?;");
-    stmt.run(newContent, id);
+    db.run("UPDATE notes SET note_text = ?, code_text = ?, start_line = ?, end_line = ?, file_id = ? WHERE id = ?;",
+        [newNote.note_text, newNote.code_text, newNote.start_line, newNote.end_line, newNote.file_id, newNote.id]);
     saveDatabase(db);
 }
 
@@ -154,6 +154,7 @@ function deleteNote(id) {
 
 
 module.exports = {
+    dbFilePath,
     initializeSQLJs,
     loadDatabase,
     saveDatabase,
@@ -163,6 +164,7 @@ module.exports = {
     deleteWorkspace,
     getFileIdByPath,
     insertNote,
+    updateNote,
     getNoteByLine,
     getAllFileNotes,
 };

@@ -1,7 +1,8 @@
-const { loadDatabase, saveDatabase } = require('./databaseService');
+const fs = require('fs');
+const dbService = require('./databaseService');
 
 async function initializeTables() {
-    const db = await loadDatabase();
+    const db = await dbService.loadDatabase();
     // Creating the workspaces table
     db.run(`CREATE TABLE IF NOT EXISTS workspaces (
         id INTEGER PRIMARY KEY, 
@@ -28,7 +29,15 @@ async function initializeTables() {
         FOREIGN KEY(file_id) REFERENCES files(id)
     )`);
 
-    saveDatabase(db);
+    dbService.saveDatabase(db);
 }
 
-module.exports = { initializeTables };
+async function isDbExistent() {
+    if (!fs.existsSync(dbService.dbFilePath)) {
+        await initializeTables()
+    }
+}
+
+module.exports = { 
+    initializeTables,
+    isDbExistent };

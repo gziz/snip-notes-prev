@@ -1,5 +1,9 @@
 /* Overall Styling */
-body, textarea {
+body {
+    margin-bottom: 200px;
+}
+
+textarea {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
         Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
     background-color: transparent; /* Transparent to match VS Code's background */
@@ -10,7 +14,6 @@ body, textarea {
     border: 1px solid rgba(255, 255, 255, 0.1); /* Slight border to distinguish each block */
     padding: 10px; /* Minimal padding */
     margin-bottom: 15px; /* Space between each block */
-    overflow-x: auto; /* Enable horizontal scrolling if content overflows */
 }
 
 .note-title {
@@ -29,11 +32,13 @@ body, textarea {
     padding: 5px 0; /* Padding top and bottom */
     overflow-x: auto; /* Enable horizontal scrolling for content */
     white-space: pre-wrap; /* Preserve spaces and line breaks */
-    resize: none; /* Remove textarea resizing capability */
 }
 
 .note-area {
     border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Thin line to divide the note text from code */
+    min-height: 30px;
+    overflow: auto;
+    word-wrap: break-word;
 }
 
 .code-container {
@@ -41,13 +46,12 @@ body, textarea {
     overflow-y: hidden; /* Prevent vertical scrolling */
     border: none; /* Remove any borders */
     width: 100%; /* Make sure it takes up the full width of its parent */
-    max-height: 150px; /* Or set to whatever maximum height you want */
+    margin-top: 5px;
 }
 
 .code-area {
     color: #D4D4D4; /* Slightly dimmer text color for code */
     font-family: 'Courier New', Courier, monospace; /* Monospace font for code */
-    font-size: 0.9em; /* 90% of the base font size */
     white-space: pre; /* Respect all whitespace, including line breaks */
     border: none; /* Remove default borders */
     padding: 0; /* No padding */
@@ -55,6 +59,7 @@ body, textarea {
     background-color: transparent; /* Transparent background */
     padding-bottom: 10px;
 }
+
 /* Custom Scrollbar Styling */
 .note-block::-webkit-scrollbar {
     width: 8px;

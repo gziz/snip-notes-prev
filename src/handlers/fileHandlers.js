@@ -40,8 +40,8 @@ function getCurrFileNotes() {
 async function loadCurrFile() {
     let editor = vscode.window.activeTextEditor;
     if (editor) {
-        let workspacePath = workspace.getWorkspacePath();
-        let workspaceId = workspace.getWorkspaceId();
+        const workspacePath = workspace.getWorkspacePath();
+        const workspaceId = workspace.getWorkspaceId();
 
         let relativeFilePath = path.relative(workspacePath, editor.document.fileName);
         let fileId = dbService.getFileIdByPath(relativeFilePath, workspaceId);

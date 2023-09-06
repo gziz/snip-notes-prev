@@ -11,17 +11,14 @@ const NotesProvider = require('./noteProvider');
  */
 async function activate(context) {
 
-    const hasBeenInitialized = context.globalState.get('snipNotesInitialized', false);
-    if (!hasBeenInitialized) {
-        await dbService.initializeSQLJs();
-        await schemas.initializeTables();
-        context.globalState.update('snipNotesInitialized', true);
-    }
+    await dbService.initializeSQLJs();
+    await schemas.isDbExistent();
 
     /* Providers */
     const provider = new NotesProvider(context.extensionUri);
     context.subscriptions.push(
 		vscode.window.registerWebviewViewProvider(NotesProvider.viewType, provider));
+
 
     /* Commands */
     context.subscriptions.push(vscode.commands.registerCommand('snip-notes.initTables', async function () {
@@ -35,17 +32,14 @@ async function activate(context) {
         provider.updateNotes();
 
     }));
-
+    
+    /* Listeners */
     vscode.window.onDidChangeActiveTextEditor(async () => {
+        if (!workspace.isInWorkspace()) return;
         setTimeout(async () => {
             await file.loadCurrFile();
             provider.updateNotes();
         }, 100);
-    });
-    
-
-    vscode.workspace.onDidChangeWorkspaceFolders(async () => {
-        activateHelper();
     });
 
     /* Processes to run when activating */

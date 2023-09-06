@@ -20,9 +20,17 @@ const createNote = async () => {
             let endLine = selection.end.line;
             let codeRange = new vscode.Range(startLine, 0, endLine, editor.document.lineAt(endLine).text.length);
             let selectedCode = editor.document.getText(codeRange);
+
             dbService.insertNote(note, selectedCode, startLine, endLine, fileId);
             vscode.window.showInformationMessage('Note succesfully created!');
         }
+    }
+}
+
+const updateNote = async (newNote) => {
+    if (newNote.note_text) {
+        dbService.updateNote(newNote);
+        vscode.window.showInformationMessage('Note succesfully updated!');
     }
 }
 
@@ -48,6 +56,7 @@ const hoverProvider = {
 
 module.exports = {
     createNote,
+    updateNote,
     hoverProvider,
     prepareToCreateNote,
 };

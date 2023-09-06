@@ -2,6 +2,7 @@
   "name": "snip-notes",
   "displayName": "Snip Notes",
   "description": "Note taking for vs-code",
+  "repository": "https://github.com/gziz/snip-notes.git",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.81.0"
@@ -9,7 +10,9 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
   "main": "./src/extension.js",
   "contributes": {
     "viewsContainers": {
@@ -31,10 +34,6 @@
       ]
     },
     "commands": [
-      {
-        "command": "snip-notes.initTables",
-        "title": "Init Tables"
-      },
       {
         "command": "snip-notes.createNote",
         "title": "Create Note"

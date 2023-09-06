@@ -2,7 +2,7 @@ const vscode = require('vscode');
 const path = require('path');
 const file = require('./handlers/fileHandlers');
 const dbService = require('./db/databaseService');
-
+const notes = require('./handlers/notesHandlers');
 class NotesProvider {
 
     static viewType = 'snipNotesView';
@@ -35,6 +35,9 @@ class NotesProvider {
                 case "updateNotes": {
                     this.updateNotes();
                     break;
+                }
+                case "noteUpdated": {
+                    notes.updateNote(message.newNote);
                 }
             }
 		});
