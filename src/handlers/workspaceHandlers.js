@@ -45,7 +45,7 @@ function isWorkspaceRegistered() {
 
 function isInWorkspace() {
   if (vscode.workspace.workspaceFolders !== undefined) return true;
-  vscode.window.showInformationMessage('You must be in a workspace for Snip Notes to be active!');
+  vscode.window.showInformationMessage('Snip Notes: You must be in a workspace for Snip Notes to be active!');
   return false;
 }
 

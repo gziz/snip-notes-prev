@@ -27,9 +27,10 @@ async function activate(context) {
     
     context.subscriptions.push(vscode.commands.registerCommand('snip-notes.createNote', async function () {  
         await notes.prepareToCreateNote();
-        await notes.createNote();
+        const newNoteId = await notes.createNote();
         await file.loadCurrFileNotes();
-        provider.updateNotes();
+        provider.focusWebview();
+        provider.refreshNotes(newNoteId);
 
     }));
     
@@ -38,7 +39,7 @@ async function activate(context) {
         if (!workspace.isInWorkspace()) return;
         setTimeout(async () => {
             await file.loadCurrFile();
-            provider.updateNotes();
+            provider.refreshNotes();
         }, 100);
     });
 
@@ -50,7 +51,6 @@ async function activate(context) {
     
         await dbService.initializeSQLJs();
         if (!workspace.isWorkspaceRegistered()) {
-            vscode.window.showInformationMessage('Seems like this workspace is not registered in SnipNotes!');
             return;
         }
         await workspace.loadWorkspace();

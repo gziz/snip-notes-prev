@@ -3,22 +3,27 @@
 
     window.addEventListener('message', event => {
         const message = event.data;
-        console.log(event); 
         switch (message.type) {
-            case 'updateNotes':
+            case 'refreshNotes':
                 {
-                    updateNotesList(message.notes)
+                    const newNoteId = message.newNoteId ? message.newNoteId : null;
+                    refreshNotes(message.notes, newNoteId)
                     break
                 }
         }
     });
 
-    vscode.postMessage({ type: 'updateNotes'});
+    vscode.postMessage({ type: 'refreshNotes'});
+
+    document.querySelector('.search-bar').addEventListener('keyup', function(event) {
+        const searchTerm = event.target.value.toLowerCase();
+        filterNotes(searchTerm);
+    });
 
     /**
      * @param {any} notes
      */
-    function updateNotesList(notes) {
+    function refreshNotes(notes, focusNoteId=null) {
         const notesDiv = document.querySelector('.notes-div');
         notesDiv.textContent = '';
     
@@ -32,7 +37,7 @@
             });
             
             const title = document.createElement('h3');
-            title.innerText = `# ${note.start_line}-${note.end_line}`;
+            title.innerText = `# ${note.start_line + 1}-${note.end_line + 1}`;
             title.classList.add('note-title');
             
             const noteArea = document.createElement('div');
@@ -55,8 +60,19 @@
             noteBlock.appendChild(codeContainer);
     
             notesDiv.appendChild(noteBlock);
-        }
 
+            if (focusNoteId) {
+                const noteToFocus = document.getElementById(`note-${focusNoteId}`);
+                if (noteToFocus) {
+                    noteToFocus.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center'
+                    });
+                }
+            }
+        }
+        const searchTerm = document.querySelector('.search-bar').value.toLowerCase();
+        filterNotes(searchTerm);
     }
 
     /** 
@@ -72,6 +88,22 @@
             vscode.postMessage({ type: 'noteUpdated', newNote: note});
         }
     }
+
+    function filterNotes(term) {
+        const notesBlocks = document.querySelectorAll('.note-block');
+    
+        for (const block of notesBlocks) {
+            const noteText = block.querySelector('.note-area').textContent.toLowerCase();
+            const codeText = block.querySelector('.code-area').textContent.toLowerCase();
+
+            if (noteText.includes(term) || codeText.includes(term)) {
+                block.style.display = ''; // show
+            } else {
+                block.style.display = 'none'; // hide
+            }
+        }
+    }
+
 }());
 
 

@@ -104,11 +104,14 @@ function deleteFile(id) {
 }
 
 /* CRUD Operations for notes */
-function insertNote(note_text, code_text, start_line, end_line, file_id) {
+async function insertNote(note_text, code_text, start_line, end_line, file_id) {
     const db = loadDatabase();
     db.run("INSERT INTO notes (note_text, code_text, start_line, end_line, file_id) VALUES (?, ?, ?, ?, ?);",
         [note_text, code_text, start_line, end_line, file_id]);
+    
+    const rowId = db.exec("SELECT last_insert_rowid() as id")[0].values[0][0];
     saveDatabase(db);
+    return rowId;
 }
 
 function getNoteById(id) {

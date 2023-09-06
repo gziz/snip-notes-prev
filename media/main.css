@@ -23,6 +23,17 @@ textarea {
     margin: 0 0 10px 0; /* Remove default margins for h3 and add some space below */
 }
 
+.search-bar {
+    box-sizing: border-box;
+    padding: 10px;
+    width: 100%;
+    border-radius: 1px;
+    border: 1px solid rgba(255, 255, 255, 0.3); /* Slight border to distinguish each block */
+    color: rgba(255, 255, 255, 0.9); /* Almost white text */
+    background-color: transparent;
+    margin-bottom: 15px;
+}
+
 /* Note and Code Area Styling */
 .note-area, .code-area {
     width: 100%; /* Take full width of the container */

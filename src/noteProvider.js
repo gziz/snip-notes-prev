@@ -32,8 +32,8 @@ class NotesProvider {
                     } 
                     break;
                 }
-                case "updateNotes": {
-                    this.updateNotes();
+                case "refreshNotes": {
+                    this.refreshNotes();
                     break;
                 }
                 case "noteUpdated": {
@@ -41,6 +41,12 @@ class NotesProvider {
                 }
             }
 		});
+    }
+
+    focusWebview(){
+        if (this._view) {
+            this._view.show(true);  // this will force the webview to come into focus
+        }
     }
 
 	_getHtmlForWebview(webview) {
@@ -59,6 +65,8 @@ class NotesProvider {
         </head>
         <body>
             <h1>Snip Notes</h1>
+            <input class="search-bar" type="text" placeholder="Search notes..." />
+
             <div class="notes-div">
             </div>
             <script src="${scriptUri}"></script>
@@ -66,10 +74,10 @@ class NotesProvider {
         </html>`;
 	}
 
-    updateNotes() {
+    refreshNotes(newNoteId = null) {
         if (this._view) {
             const currFileNotes = file.getCurrFileNotes();
-            this._view.webview.postMessage({ type: 'updateNotes' , notes: currFileNotes});
+            this._view.webview.postMessage({ type: 'refreshNotes' , notes: currFileNotes , newNoteId: newNoteId });
         }
     }
 }

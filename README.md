@@ -1,2 +1,2 @@
-# snip-notes README
-VS CODE Extension to take notes!
+# Snip Notes
+VS CODE Extension to take notes from your code.

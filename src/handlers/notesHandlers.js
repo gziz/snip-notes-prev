@@ -13,16 +13,17 @@ const createNote = async () => {
         let fileId = file.getFileId()
 
         let selection = editor.selection;
-        let note = await vscode.window.showInputBox({ prompt: 'Enter your note' });
+        let noteText = await vscode.window.showInputBox({ prompt: 'Enter your note:' });
         
-        if (note) {
-            let startLine = selection.start.line
+        if (noteText) {
+            let startLine = selection.start.line;
             let endLine = selection.end.line;
             let codeRange = new vscode.Range(startLine, 0, endLine, editor.document.lineAt(endLine).text.length);
             let selectedCode = editor.document.getText(codeRange);
 
-            dbService.insertNote(note, selectedCode, startLine, endLine, fileId);
-            vscode.window.showInformationMessage('Note succesfully created!');
+            const noteId = await dbService.insertNote(noteText, selectedCode, startLine, endLine, fileId);
+            vscode.window.showInformationMessage('Snip Notes: Note succesfully created!');
+            return noteId;
         }
     }
 }
@@ -30,7 +31,7 @@ const createNote = async () => {
 const updateNote = async (newNote) => {
     if (newNote.note_text) {
         dbService.updateNote(newNote);
-        vscode.window.showInformationMessage('Note succesfully updated!');
+        vscode.window.showInformationMessage('Snip Notes: Note succesfully updated!');
     }
 }
 
