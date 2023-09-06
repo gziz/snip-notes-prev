@@ -2,8 +2,9 @@
   "name": "snip-notes",
   "displayName": "Snip Notes",
   "description": "Note taking for vs-code",
+  "publisher": "gziz",
   "repository": "https://github.com/gziz/snip-notes.git",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "engines": {
     "vscode": "^1.81.0"
   },
@@ -37,6 +38,10 @@
       {
         "command": "snip-notes.createNote",
         "title": "Create Note"
+      },
+      {
+        "command": "snip-notes.refreshNotes",
+        "title": "Refresh Notes"
       }
     ]
   },
