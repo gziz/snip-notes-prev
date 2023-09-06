@@ -1,6 +1,7 @@
 {
   "name": "snip-notes",
   "displayName": "Snip Notes",
+  "publisher": "gziz",
   "description": "Note taking for vs-code",
   "repository": "https://github.com/gziz/snip-notes.git",
   "version": "0.0.1",
@@ -13,14 +14,14 @@
   "activationEvents": [
     "onStartupFinished"
   ],
-  "main": "./src/extension.js",
+  "main": "./out/main.js",
   "contributes": {
     "viewsContainers": {
       "activitybar": [
         {
           "id": "snipNotesView",
           "title": "Snip Notes",
-          "icon": "resources/small-diamond.svg"
+          "icon": "resources/snip-notes.svg"
         }
       ]
     },
@@ -41,15 +42,20 @@
     ]
   },
   "scripts": {
+    "copy:wasm": "copyfiles -f node_modules/sql.js/dist/sql-wasm.wasm out/",
+    "vscode:prepublish": "npm run esbuild-base -- --minify && npm run copy:wasm",
+    "esbuild-base": "esbuild ./src/extension.js --bundle --outfile=out/main.js --external:vscode --format=cjs --platform=node",
+    "esbuild": "npm run esbuild-base -- --sourcemap",
+    "esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
     "lint": "eslint .",
-    "pretest": "npm run lint",
-    "test": "node ./test/runTest.js"
+    "pretest": "npm run lint"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.1",
     "@types/node": "16.x",
     "@types/vscode": "^1.81.0",
     "@vscode/test-electron": "^2.3.4",
+    "esbuild": "^0.19.2",
     "eslint": "^8.47.0",
     "glob": "^10.3.3",
     "mocha": "^10.2.0",
