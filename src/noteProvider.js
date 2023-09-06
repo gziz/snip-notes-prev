@@ -74,8 +74,9 @@ class NotesProvider {
         </html>`;
 	}
 
-    refreshNotes(newNoteId = null) {
+    async refreshNotes(newNoteId = null) {
         if (this._view) {
+            await file.loadCurrFileNotes()
             const currFileNotes = file.getCurrFileNotes();
             this._view.webview.postMessage({ type: 'refreshNotes' , notes: currFileNotes , newNoteId: newNoteId });
         }

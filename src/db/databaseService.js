@@ -141,7 +141,7 @@ function getAllFileNotes(fileId) {
     return rows;
 }
 
-function updateNote(newNote) {
+async function updateNote(newNote) {
     const db = loadDatabase();
     db.run("UPDATE notes SET note_text = ?, code_text = ?, start_line = ?, end_line = ?, file_id = ? WHERE id = ?;",
         [newNote.note_text, newNote.code_text, newNote.start_line, newNote.end_line, newNote.file_id, newNote.id]);

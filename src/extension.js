@@ -20,20 +20,19 @@ async function activate(context) {
 		vscode.window.registerWebviewViewProvider(NotesProvider.viewType, provider));
 
 
-    /* Commands */
-    context.subscriptions.push(vscode.commands.registerCommand('snip-notes.initTables', async function () {
-        schemas.initializeTables();
-    }));
-    
+    /* Commands */    
     context.subscriptions.push(vscode.commands.registerCommand('snip-notes.createNote', async function () {  
         await notes.prepareToCreateNote();
         const newNoteId = await notes.createNote();
         await file.loadCurrFileNotes();
         provider.focusWebview();
         provider.refreshNotes(newNoteId);
-
     }));
     
+    context.subscriptions.push(vscode.commands.registerCommand('snip-notes.refreshNotes', async function () {  
+        provider.refreshNotes();
+    }));
+
     /* Listeners */
     vscode.window.onDidChangeActiveTextEditor(async () => {
         if (!workspace.isInWorkspace()) return;

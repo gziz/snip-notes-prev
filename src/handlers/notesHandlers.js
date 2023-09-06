@@ -30,8 +30,9 @@ const createNote = async () => {
 
 const updateNote = async (newNote) => {
     if (newNote.note_text) {
-        dbService.updateNote(newNote);
+        await dbService.updateNote(newNote);
         vscode.window.showInformationMessage('Snip Notes: Note succesfully updated!');
+        vscode.commands.executeCommand('snip-notes.refreshNotes');
     }
 }
 
