@@ -22,7 +22,7 @@ function getWorkspaceId() {
   return workspaceId;
 }
 
-function loadWorkspace() {
+async function loadWorkspace() {
   if (!isInWorkspace()) return;
   const workspacePath = vscode.workspace.workspaceFolders[0].uri.fsPath;
   const workspaceName = path.basename(workspacePath);
@@ -43,9 +43,11 @@ function isWorkspaceRegistered() {
   return workspaceId != null;
 }
 
-function isInWorkspace() {
+function isInWorkspace(warning=false) {
   if (vscode.workspace.workspaceFolders !== undefined) return true;
-  vscode.window.showInformationMessage('Snip Notes: You must be in a workspace for Snip Notes to be active!');
+  if (warning) {
+    vscode.window.showInformationMessage('Snip Notes: You must be in a workspace for Snip Notes to be active!');
+  }
   return false;
 }
 

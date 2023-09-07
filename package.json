@@ -34,10 +34,22 @@
         }
       ]
     },
+    "menus": {
+      "webview/context": [
+        {
+          "command": "snip-notes.deleteNote",
+          "when": "webviewId == 'snipNotesView' && webviewSection == 'noteBlock'"
+        }
+      ]
+    },
     "commands": [
       {
         "command": "snip-notes.createNote",
         "title": "Create Note"
+      },
+      {
+        "command": "snip-notes.deleteNote",
+        "title": "Delete Note"
       },
       {
         "command": "snip-notes.refreshNotes",

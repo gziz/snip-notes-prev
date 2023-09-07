@@ -20,6 +20,24 @@
         filterNotes(searchTerm);
     });
 
+    document.addEventListener('contextmenu', (event) => {
+        // Check if the clicked element or its parent is a note
+        let target = event.target;
+        while (target && !target.classList.contains('note-block')) {
+            target = target.parentElement;
+        }
+    
+        if (target && target.classList.contains('note-block')) {
+            const htmlNoteId = target.getAttribute('id');
+            const noteId = htmlNoteId.split('-')[1];
+            vscode.postMessage({
+                type: 'rightClickedNote',
+                noteId: parseInt(noteId)
+            });
+            console.log(noteId);
+        }
+      });
+
     /**
      * @param {any} notes
      */
@@ -30,8 +48,12 @@
         for (const note of notes) {
             const noteBlock = document.createElement('div');
             noteBlock.classList.add('note-block');
-            
             noteBlock.id=`note-${note.id}`;
+            noteBlock.setAttribute(
+                'data-vscode-context',
+                '{"webviewSection": "noteBlock", "preventDefaultContextMenuItems": true}'
+                );
+
             noteBlock.addEventListener('click', () => {
                 onNoteClicked(note)
             });
@@ -46,6 +68,12 @@
             noteArea.setAttribute('contenteditable', 'true');
             
             noteArea.addEventListener('blur', () => onNoteUpdate(note, noteArea.innerHTML))
+            noteArea.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter' && !event.shiftKey) {
+                    event.preventDefault();
+                    noteArea.blur();
+                }
+            });
 
             const codeContainer = document.createElement('div');
             codeContainer.classList.add('code-container');

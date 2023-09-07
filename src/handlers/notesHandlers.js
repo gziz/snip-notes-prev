@@ -37,7 +37,7 @@ const updateNote = async (newNote) => {
 }
 
 const prepareToCreateNote = async () => {
-    if (!workspace.isInWorkspace()) return;
+    if (!workspace.isInWorkspace(true)) return;
     if (!workspace.isWorkspaceRegistered()) {
         await workspace.loadWorkspace();
         await file.loadCurrFile();
@@ -56,9 +56,21 @@ const hoverProvider = {
     }
 }
 
+let rightClickedNoteId;
+const setRightClickNote = (noteId) => {
+    rightClickedNoteId = noteId;
+}
+
+const deleteNote = () => {
+    dbService.deleteNote(rightClickedNoteId);
+    vscode.commands.executeCommand('snip-notes.refreshNotes');
+}
+
 module.exports = {
     createNote,
     updateNote,
+    deleteNote,
     hoverProvider,
     prepareToCreateNote,
+    setRightClickNote,
 };

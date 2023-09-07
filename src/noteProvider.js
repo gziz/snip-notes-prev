@@ -10,7 +10,7 @@ class NotesProvider {
     constructor(extensionUri) {
         this._extensionUri = extensionUri;
     }
-
+    
     resolveWebviewView(webviewView) {
 		this._view = webviewView;
 		webviewView.webview.options = {
@@ -38,6 +38,11 @@ class NotesProvider {
                 }
                 case "noteUpdated": {
                     notes.updateNote(message.newNote);
+                    break;
+                }
+                case "rightClickedNote": {
+                    notes.setRightClickNote(message.noteId);
+                    break;
                 }
             }
 		});
@@ -80,6 +85,9 @@ class NotesProvider {
             const currFileNotes = file.getCurrFileNotes();
             this._view.webview.postMessage({ type: 'refreshNotes' , notes: currFileNotes , newNoteId: newNoteId });
         }
+    }
+    async deleteNote() {
+        dbService.deleteNote()
     }
 }
 

@@ -33,6 +33,10 @@ async function activate(context) {
         provider.refreshNotes();
     }));
 
+    context.subscriptions.push(vscode.commands.registerCommand('snip-notes.deleteNote', async function () {  
+        notes.deleteNote();
+    }));
+
     /* Listeners */
     vscode.window.onDidChangeActiveTextEditor(async () => {
         if (!workspace.isInWorkspace()) return;
@@ -55,9 +59,9 @@ async function activate(context) {
         await workspace.loadWorkspace();
         await file.loadCurrFile();
 
-        context.subscriptions.push(
-            vscode.languages.registerHoverProvider('*', notes.hoverProvider)
-        );
+        // context.subscriptions.push(
+        //     vscode.languages.registerHoverProvider('*', notes.hoverProvider)
+        // );
     }
 }
 

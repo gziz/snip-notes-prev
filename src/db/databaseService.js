@@ -150,8 +150,7 @@ async function updateNote(newNote) {
 
 function deleteNote(id) {
     const db = loadDatabase();
-    const stmt = db.prepare("DELETE FROM notes WHERE id = ?;");
-    stmt.run(id);
+    db.run("DELETE FROM notes WHERE id = ?;", [id]);
     saveDatabase(db);
 }
 
@@ -168,6 +167,7 @@ module.exports = {
     getFileIdByPath,
     insertNote,
     updateNote,
+    deleteNote,
     getNoteByLine,
     getAllFileNotes,
 };
