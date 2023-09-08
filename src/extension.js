@@ -24,7 +24,6 @@ async function activate(context) {
     context.subscriptions.push(vscode.commands.registerCommand('snip-notes.createNote', async function () {  
         await notes.prepareToCreateNote();
         const newNoteId = await notes.createNote();
-        await file.loadCurrFileNotes();
         provider.focusWebview();
         provider.refreshNotes(newNoteId);
     }));

@@ -4,73 +4,71 @@ const workspace = require('./workspaceHandlers');
 const dbService = require('../db/databaseService');
 const file = require('./fileHandlers');
 
-const createNote = async () => {
+class NoteManager {
+    constructor() {
+        this.rightClickedNoteId = null;
+    }
 
-    let editor = vscode.window.activeTextEditor;
-    if (editor) {
-        
-        let relativeFilePath = file.getFileRelativePath()
-        let fileId = file.getFileId()
+    async createNote() {
+        let editor = vscode.window.activeTextEditor;
+        if (editor) {
+            
+            let relativeFilePath = file.getFileRelativePath()
+            let fileId = file.getFileId()
 
-        let selection = editor.selection;
-        let noteText = await vscode.window.showInputBox({ prompt: 'Enter your note:' });
-        
-        if (noteText) {
-            let startLine = selection.start.line;
-            let endLine = selection.end.line;
-            let codeRange = new vscode.Range(startLine, 0, endLine, editor.document.lineAt(endLine).text.length);
-            let selectedCode = editor.document.getText(codeRange);
+            let selection = editor.selection;
+            let noteText = await vscode.window.showInputBox({ prompt: 'Enter your note:' });
+            
+            if (noteText) {
+                let startLine = selection.start.line;
+                let endLine = selection.end.line;
+                let codeRange = new vscode.Range(startLine, 0, endLine, editor.document.lineAt(endLine).text.length);
+                let selectedCode = editor.document.getText(codeRange);
 
-            const noteId = await dbService.insertNote(noteText, selectedCode, startLine, endLine, fileId);
-            vscode.window.showInformationMessage('Snip Notes: Note succesfully created!');
-            return noteId;
+                const noteId = await dbService.insertNote(noteText, selectedCode, startLine, endLine, fileId);
+                vscode.window.showInformationMessage('Snip Notes: Note succesfully created!');
+                return noteId;
+            }
         }
     }
-}
 
-const updateNote = async (newNote) => {
-    if (newNote.note_text) {
-        await dbService.updateNote(newNote);
-        vscode.window.showInformationMessage('Snip Notes: Note succesfully updated!');
+    async updateNote(newNote) {
+        if (newNote.note_text) {
+            await dbService.updateNote(newNote);
+            vscode.window.showInformationMessage('Snip Notes: Note succesfully updated!');
+            vscode.commands.executeCommand('snip-notes.refreshNotes');
+        }
+    }
+
+    async prepareToCreateNote() {
+        if (!workspace.isInWorkspace(true)) return;
+        if (!workspace.isWorkspaceRegistered()) {
+            await workspace.loadWorkspace();
+        }
+        await file.loadCurrFile(true);
+    }
+
+    hoverProvider() {
+        return {
+            provideHover: (document, position, token) => {
+                let line = position.line;
+                const fileId = file.getFileId();
+                const noteText = dbService.getNoteByLine(line, fileId);
+                if (noteText) {
+                    return new vscode.Hover(noteText);
+                }
+            }
+        };
+    }
+
+    setRightClickNote(noteId) {
+        this.rightClickedNoteId = noteId;
+    }
+
+    deleteNote() {
+        dbService.deleteNote(this.rightClickedNoteId);
         vscode.commands.executeCommand('snip-notes.refreshNotes');
     }
 }
 
-const prepareToCreateNote = async () => {
-    if (!workspace.isInWorkspace(true)) return;
-    if (!workspace.isWorkspaceRegistered()) {
-        await workspace.loadWorkspace();
-        await file.loadCurrFile();
-    }
-}
-
-
-const hoverProvider = {
-    provideHover(document, position, token) {
-        let line = position.line;
-        const fileId = file.getFileId();
-        const noteText = dbService.getNoteByLine(line, fileId);
-        if(noteText) {
-            return new vscode.Hover(noteText);
-        }
-    }
-}
-
-let rightClickedNoteId;
-const setRightClickNote = (noteId) => {
-    rightClickedNoteId = noteId;
-}
-
-const deleteNote = () => {
-    dbService.deleteNote(rightClickedNoteId);
-    vscode.commands.executeCommand('snip-notes.refreshNotes');
-}
-
-module.exports = {
-    createNote,
-    updateNote,
-    deleteNote,
-    hoverProvider,
-    prepareToCreateNote,
-    setRightClickNote,
-};
+module.exports = new NoteManager();

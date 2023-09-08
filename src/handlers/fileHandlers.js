@@ -3,63 +3,62 @@ const vscode = require('vscode');
 const workspace = require('./workspaceHandlers');
 const dbService = require('../db/databaseService');
 
-let fileRelativePath = null;
-let fileId = null;
-let currFileNotes = null;
+class FileHandler {
+  constructor() {
+    // this.fileRelativePath = null;
+    this.fileId = null;
+    this.currFileNotes = null;
+  }
 
-function updateFileRelativePath(relativePath) {
-    fileRelativePath = relativePath;
+  updateFileRelativePath(relativePath) {
+    this.fileRelativePath = relativePath;
+  }
+
+  getFileRelativePath() {
+    return this.fileRelativePath;
+  }
+
+  updateFileID(id) {
+    this.fileId = id;
+  }
+
+  getFileId() {
+    return this.fileId;
+  }
+
+  updateCurrFileNotes(newFileNotes) {
+    this.currFileNotes = newFileNotes;
+  }
+
+  async loadCurrFileNotes() {
+    if (!this.getFileId()) return
+    const fileId = this.getFileId();
+    const newFileNotes = dbService.getAllFileNotes(fileId);
+    this.updateCurrFileNotes(newFileNotes);
+  }
+
+  getCurrFileNotes() {
+    return this.currFileNotes ? this.currFileNotes : [];
+  }
+
+  async loadCurrFile(insertIfNotExists=false) {
+      let editor = vscode.window.activeTextEditor;
+      if (editor) {
+          const workspacePath = workspace.getWorkspacePath();
+          const workspaceId = workspace.getWorkspaceId();
+
+          const relativeFilePath = path.relative(workspacePath, editor.document.fileName);
+          const fileId = dbService.getFileIdByPath(relativeFilePath, workspaceId, insertIfNotExists);
+          this.updateFileID(fileId);
+          if (fileId) {
+            let newFileNotes = dbService.getAllFileNotes(fileId);
+            this.updateCurrFileNotes(newFileNotes);
+          }
+          else {
+            this.updateCurrFileNotes([]);
+          }
+      }
+  }
 }
 
-function getFileRelativePath() {
-  return fileRelativePath;
-}
-
-function updateFileID(id) {
-  fileId = id;
-}
-
-function getFileId() {
-  return fileId;
-}
-
-function updateCurrFileNotes(newFileNotes) {
-    currFileNotes = newFileNotes;
-}
-
-async function loadCurrFileNotes() {
-  const fileId = getFileId();
-  const newFileNotes = dbService.getAllFileNotes(fileId);
-  updateCurrFileNotes(newFileNotes);
-}
-
-function getCurrFileNotes() {
-    return currFileNotes;
-}
-
-async function loadCurrFile() {
-    let editor = vscode.window.activeTextEditor;
-    if (editor) {
-        const workspacePath = workspace.getWorkspacePath();
-        const workspaceId = workspace.getWorkspaceId();
-
-        let relativeFilePath = path.relative(workspacePath, editor.document.fileName);
-        let fileId = dbService.getFileIdByPath(relativeFilePath, workspaceId);
-        let newFileNotes = dbService.getAllFileNotes(fileId);
-
-        updateFileRelativePath(relativeFilePath);
-        updateFileID(fileId);
-        updateCurrFileNotes(newFileNotes);
-    }
-}
-
-module.exports = {
-    updateFileRelativePath,
-    getFileRelativePath,
-    updateFileID,
-    getFileId,
-    updateCurrFileNotes,
-    getCurrFileNotes,
-    loadCurrFile,
-    loadCurrFileNotes
-};
+module.exports = new FileHandler();

@@ -58,13 +58,6 @@ function getWorkspaceIdByName(name, path) {
     return res.id
 }
 
-function deleteWorkspace(id) {
-    const db = loadDatabase();
-    const stmt = db.prepare("DELETE FROM workspaces WHERE id = ?;");
-    stmt.run(id);
-    saveDatabase(db);
-}
-
 /* CRUD Operations for files */
 function insertFile(relativePath, workspaceId) {
     const db = loadDatabase();
@@ -77,12 +70,12 @@ function insertFile(relativePath, workspaceId) {
 //     return db.exec(`SELECT * FROM files WHERE id = ${id};`);
 // }
 
-function getFileIdByPath(relativePath, workspaceId) {
+function getFileIdByPath(relativePath, workspaceId, insertIfNotExists) {
 
     const db = loadDatabase();
     const stmt = db.prepare("SELECT * FROM files WHERE relative_path = $relative_path");
     const res = stmt.getAsObject({$relative_path:relativePath})
-    if (!res.id) {
+    if (!res.id && insertIfNotExists) {
         insertFile(relativePath, workspaceId);
         return getFileIdByPath(relativePath, workspaceId);
     }
@@ -163,7 +156,6 @@ module.exports = {
     insertWorkspace,
     getWorkspaceById,
     getWorkspaceIdByName,
-    deleteWorkspace,
     getFileIdByPath,
     insertNote,
     updateNote,
