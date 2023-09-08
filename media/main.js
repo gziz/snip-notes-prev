@@ -79,7 +79,7 @@
             codeContainer.classList.add('code-container');
     
             const codePre = document.createElement('pre');
-            codePre.textContent = note.code_text; // Prefer using textContent over innerText
+            codePre.textContent = normalizeIndentation(note.code_text);
             codePre.classList.add('code-area');
             
             codeContainer.appendChild(codePre);
@@ -130,6 +130,19 @@
                 block.style.display = 'none'; // hide
             }
         }
+    }
+
+    function normalizeIndentation(code) {
+        // Empty lines have a left padding of 0, take the min based on only lines of code.
+        const lines = code.split('\n')
+        const linesOnlyCode = lines.filter(line => line.trim() !== '');
+        if (linesOnlyCode.length === 0) return code;  // No lines to process
+    
+        const minIndent = Math.min(
+            ...linesOnlyCode.map(line => line.search(/\S/))  // Find first non-whitespace character for each line
+        );
+    
+        return lines.map(line => line.substring(minIndent)).join('\n');
     }
 
 }());
