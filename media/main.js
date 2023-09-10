@@ -1,7 +1,15 @@
-(function () {
+(function() {
     const vscode = acquireVsCodeApi();
 
-    window.addEventListener('message', event => {
+    window.addEventListener('message', handleMessage);
+
+    document.querySelector('.search-bar').addEventListener('keyup', handleSearch);
+
+    document.addEventListener('contextmenu', handleRightClick);
+
+    vscode.postMessage({ type: 'refreshNotes' });
+
+    function handleMessage(event) {
         const message = event.data;
         switch (message.type) {
             case 'refreshNotes':
@@ -11,36 +19,31 @@
                     break
                 }
         }
-    });
+    }
 
-    vscode.postMessage({ type: 'refreshNotes'});
-
-    document.querySelector('.search-bar').addEventListener('keyup', function(event) {
+    function handleSearch(event) {
         const searchTerm = event.target.value.toLowerCase();
         filterNotes(searchTerm);
-    });
+    }
 
-    document.addEventListener('contextmenu', (event) => {
-        // Check if the clicked element or its parent is a note
-        let target = event.target;
-        while (target && !target.classList.contains('note-block')) {
-            target = target.parentElement;
-        }
-    
-        if (target && target.classList.contains('note-block')) {
-            const htmlNoteId = target.getAttribute('id');
-            const noteId = htmlNoteId.split('-')[1];
+    function handleRightClick(event) {
+        let target = getClosest(event.target, '.note-block');
+        if (target) {
+            const noteId = parseInt(target.getAttribute('id').split('-')[1]);
             vscode.postMessage({
                 type: 'rightClickedNote',
-                noteId: parseInt(noteId)
+                noteId: noteId
             });
-            console.log(noteId);
         }
-      });
+    }
 
-    /**
-     * @param {any} notes
-     */
+    function getClosest(elem, selector) {
+        for (; elem && elem !== document; elem = elem.parentElement) {
+            if (elem.matches(selector)) return elem;
+        }
+        return null;
+    }
+
     function refreshNotes(notes, focusNoteId=null) {
         const notesDiv = document.querySelector('.notes-div');
         notesDiv.textContent = '';
@@ -103,9 +106,6 @@
         filterNotes(searchTerm);
     }
 
-    /** 
-     * @param {any} note
-     */
     function onNoteClicked(note) {
         vscode.postMessage({ type: 'noteClicked', value: note.start_line });
     }
@@ -131,7 +131,7 @@
             }
         }
     }
-
+ 
     function normalizeIndentation(code) {
         // Empty lines have a left padding of 0, take the min based on only lines of code.
         const lines = code.split('\n')
@@ -145,6 +145,4 @@
         return lines.map(line => line.substring(minIndent)).join('\n');
     }
 
-}());
-
-
+})();

@@ -1,9 +1,10 @@
 const path = require('path');
 const vscode = require('vscode');
-const workspace = require('./workspaceHandlers');
+const workspace = require('./workspaceManager');
 const dbService = require('../db/databaseService');
+const fs = require('fs');
 
-class FileHandler {
+class FileManager {
   constructor() {
     // this.fileRelativePath = null;
     this.fileId = null;
@@ -33,7 +34,7 @@ class FileHandler {
   async loadCurrFileNotes() {
     if (!this.getFileId()) return
     const fileId = this.getFileId();
-    const newFileNotes = dbService.getAllFileNotes(fileId);
+    const newFileNotes = await dbService.getNotesFromFileId(fileId);
     this.updateCurrFileNotes(newFileNotes);
   }
 
@@ -41,6 +42,16 @@ class FileHandler {
     return this.currFileNotes ? this.currFileNotes : [];
   }
 
+  isFileIdInDbPath(fileId) {
+    const relativePath = dbService.getPathByFileId(fileId)
+    return this.fileExists(relativePath);
+  }
+
+  fileExists(relativeFilePath) {
+    const workspacePath = workspace.getWorkspacePath()
+    const absolutePath = path.join(workspacePath, relativeFilePath);
+    return fs.existsSync(absolutePath);
+  }
   async loadCurrFile(insertIfNotExists=false) {
       let editor = vscode.window.activeTextEditor;
       if (editor) {
@@ -51,7 +62,7 @@ class FileHandler {
           const fileId = dbService.getFileIdByPath(relativeFilePath, workspaceId, insertIfNotExists);
           this.updateFileID(fileId);
           if (fileId) {
-            let newFileNotes = dbService.getAllFileNotes(fileId);
+            let newFileNotes = dbService.getNotesFromFileId(fileId);
             this.updateCurrFileNotes(newFileNotes);
           }
           else {
@@ -61,4 +72,4 @@ class FileHandler {
   }
 }
 
-module.exports = new FileHandler();
+module.exports = new FileManager();

@@ -4,7 +4,7 @@
   "description": "Note taking for vs-code",
   "publisher": "gziz",
   "repository": "https://github.com/gziz/snip-notes.git",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "engines": {
     "vscode": "^1.81.0"
   },
@@ -19,18 +19,22 @@
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "snipNotesView",
+          "id": "snipNotes",
           "title": "Snip Notes",
           "icon": "resources/snip-notes.svg"
         }
       ]
     },
     "views": {
-      "snipNotesView": [
+      "snipNotes": [
         {
           "type": "webview",
-          "id": "snipNotesView",
-          "name": "Snip Notes"
+          "id": "snipNotes.webView",
+          "name": "Block Notes"
+        },
+        {
+          "id": "snipNotes.treeView",
+          "name": "Tree Notes"
         }
       ]
     },
@@ -38,7 +42,7 @@
       "webview/context": [
         {
           "command": "snip-notes.deleteNote",
-          "when": "webviewId == 'snipNotesView' && webviewSection == 'noteBlock'"
+          "when": "webviewId == 'snipNotes.webView' && webviewSection == 'noteBlock'"
         }
       ]
     },

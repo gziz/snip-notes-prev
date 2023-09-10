@@ -1,8 +1,8 @@
 const vscode = require('vscode');
 const path = require('path');
-const workspace = require('./workspaceHandlers');
+const workspace = require('./workspaceManager');
 const dbService = require('../db/databaseService');
-const file = require('./fileHandlers');
+const file = require('./fileManager');
 
 class NoteManager {
     constructor() {
@@ -48,17 +48,15 @@ class NoteManager {
         await file.loadCurrFile(true);
     }
 
-    hoverProvider() {
-        return {
-            provideHover: (document, position, token) => {
-                let line = position.line;
-                const fileId = file.getFileId();
-                const noteText = dbService.getNoteByLine(line, fileId);
-                if (noteText) {
-                    return new vscode.Hover(noteText);
-                }
+    hoverProvider = {
+        provideHover(document, position, token) {
+            let line = position.line;
+            const fileId = file.getFileId();
+            const noteText = dbService.getNoteTextFromLine(line, fileId);
+            if(noteText) {
+                return new vscode.Hover(noteText);
             }
-        };
+        }
     }
 
     setRightClickNote(noteId) {

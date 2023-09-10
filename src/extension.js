@@ -1,16 +1,17 @@
 const vscode = require('vscode');
 const dbService = require('./db/databaseService');
 const schemas = require('./db/schemas');
-const workspace = require('./handlers/workspaceHandlers');
-const notes = require('./handlers/notesHandlers');
-const file = require('./handlers/fileHandlers');
+const workspace = require('./managers/workspaceManager');
+const notes = require('./managers/noteManager');
+const file = require('./managers/fileManager');
 const NotesProvider = require('./noteProvider');
+const NoteTreeProvider = require('./noteTreeProvider');
 
 /**
  * @param {vscode.ExtensionContext} context
  */
 async function activate(context) {
-
+    dbService.setGlobalStoragePath(context.globalStorageUri);
     await dbService.initializeSQLJs();
     await schemas.isDbExistent();
 
@@ -19,6 +20,10 @@ async function activate(context) {
     context.subscriptions.push(
 		vscode.window.registerWebviewViewProvider(NotesProvider.viewType, provider));
 
+    const workspaceRoot = vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri.fsPath : undefined;
+    const treeProvider = new NoteTreeProvider(workspaceRoot);
+    vscode.window.createTreeView('snipNotes.treeView', 
+        {treeDataProvider: treeProvider});
 
     /* Commands */    
     context.subscriptions.push(vscode.commands.registerCommand('snip-notes.createNote', async function () {  
@@ -26,23 +31,24 @@ async function activate(context) {
         const newNoteId = await notes.createNote();
         provider.focusWebview();
         provider.refreshNotes(newNoteId);
+        treeProvider.refresh();
     }));
     
     context.subscriptions.push(vscode.commands.registerCommand('snip-notes.refreshNotes', async function () {  
         provider.refreshNotes();
+        treeProvider.refresh();
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand('snip-notes.deleteNote', async function () {  
         notes.deleteNote();
+        vscode.commands.executeCommand('snip-notes.refreshNotes');
     }));
 
     /* Listeners */
     vscode.window.onDidChangeActiveTextEditor(async () => {
-        if (!workspace.isInWorkspace()) return;
-        setTimeout(async () => {
+        if (!workspace.isInWorkspace() || !workspace.getWorkspaceId()) return;
             await file.loadCurrFile();
             provider.refreshNotes();
-        }, 100);
     });
 
     /* Processes to run when activating */
@@ -58,9 +64,9 @@ async function activate(context) {
         await workspace.loadWorkspace();
         await file.loadCurrFile();
 
-        // context.subscriptions.push(
-        //     vscode.languages.registerHoverProvider('*', notes.hoverProvider)
-        // );
+        context.subscriptions.push(
+            vscode.languages.registerHoverProvider('*', notes.hoverProvider)
+        );
     }
 }
 

@@ -2,7 +2,7 @@ const vscode = require('vscode');
 const path = require('path');
 const dbService = require('../db/databaseService');
 
-class WorkspaceHandlers {
+class WorkspaceManager {
   constructor() {
     this.workspaceName = null;
     this.workspacePath = null;
@@ -66,4 +66,4 @@ class WorkspaceHandlers {
   }
 }
 
-module.exports = new WorkspaceHandlers();
+module.exports = new WorkspaceManager();
