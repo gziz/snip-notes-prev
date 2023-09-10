@@ -62,6 +62,8 @@ class NotesProvider {
 	_getHtmlForWebview(webview) {
         const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'main.js'));
         const styleMainUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'main.css'));
+        const scriptPrismUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'prism.js'));
+        const stylePrismUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'prism.css'));
 
         return `
         <!DOCTYPE html>
@@ -71,12 +73,14 @@ class NotesProvider {
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Snip Notes</title>
             <link href="${styleMainUri}" rel="stylesheet">
+            <link href="${stylePrismUri}" rel="stylesheet">
         </head>
         <body>
             <h1>Snip Notes</h1>
             <input class="search-bar" type="text" placeholder="Search notes..." />
             <div class="notes-div"></div>
             <script src="${scriptUri}"></script>
+            <script src="${scriptPrismUri}"></script>
         </body>
         </html>`;
 	}
@@ -85,7 +89,7 @@ class NotesProvider {
         if (this._view) {
             await file.loadCurrFileNotes();
             const currFileNotes = file.getCurrFileNotes();
-            this._view.webview.postMessage({ type: 'refreshNotes' , notes: currFileNotes , newNoteId: newNoteId });
+            this._view.webview.postMessage({ type: 'refreshNotes' , notes: currFileNotes, newNoteId: newNoteId });
         }
     }
 

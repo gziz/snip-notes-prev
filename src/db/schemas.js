@@ -23,6 +23,7 @@ async function initializeTables() {
         code_text TEXT,
         start_line INTEGER, 
         end_line INTEGER, 
+        language_id TEXT,
         file_id INTEGER,
         FOREIGN KEY(file_id) REFERENCES files(id)
     )`);

@@ -100,10 +100,10 @@ class DatabaseService {
         this.saveDatabase(db);
     }
 
-    async insertNote(note_text, code_text, start_line, end_line, file_id) {
+    async insertNote(note_text, code_text, start_line, end_line, language_id, file_id) {
         const db = this.loadDatabase();
-        db.run("INSERT INTO notes (note_text, code_text, start_line, end_line, file_id) VALUES (?, ?, ?, ?, ?);",
-            [note_text, code_text, start_line, end_line, file_id]);
+        db.run("INSERT INTO notes (note_text, code_text, start_line, end_line, language_id, file_id) VALUES (?, ?, ?, ?, ?, ?);",
+            [note_text, code_text, start_line, end_line, language_id, file_id]);
         const rowId = db.exec("SELECT last_insert_rowid() as id")[0].values[0][0];
         this.saveDatabase(db);
         return rowId;

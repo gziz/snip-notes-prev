@@ -13,19 +13,19 @@ class NoteManager {
         let editor = vscode.window.activeTextEditor;
         if (editor) {
             
-            let relativeFilePath = file.getFileRelativePath()
-            let fileId = file.getFileId()
+            const fileId = file.getFileId()
+            const languageId = editor.document.languageId;
 
-            let selection = editor.selection;
-            let noteText = await vscode.window.showInputBox({ prompt: 'Enter your note:' });
+            const selection = editor.selection;
+            const noteText = await vscode.window.showInputBox({ prompt: 'Enter your note:' });
             
             if (noteText) {
-                let startLine = selection.start.line;
-                let endLine = selection.end.line;
-                let codeRange = new vscode.Range(startLine, 0, endLine, editor.document.lineAt(endLine).text.length);
-                let selectedCode = editor.document.getText(codeRange);
+                const startLine = selection.start.line;
+                const endLine = selection.end.line;
+                const codeRange = new vscode.Range(startLine, 0, endLine, editor.document.lineAt(endLine).text.length);
+                const selectedCode = editor.document.getText(codeRange);
 
-                const noteId = await dbService.insertNote(noteText, selectedCode, startLine, endLine, fileId);
+                const noteId = await dbService.insertNote(noteText, selectedCode, startLine, endLine, languageId, fileId);
                 vscode.window.showInformationMessage('Snip Notes: Note succesfully created!');
                 return noteId;
             }

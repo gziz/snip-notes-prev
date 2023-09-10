@@ -82,8 +82,14 @@
             codeContainer.classList.add('code-container');
     
             const codePre = document.createElement('pre');
-            codePre.textContent = normalizeIndentation(note.code_text);
+            const codeElement = document.createElement('code');
+            codeElement.classList.add(`language-${note.language_id}`);
+            codeElement.textContent = normalizeIndentation(note.code_text);
+
+            codePre.appendChild(codeElement);
             codePre.classList.add('code-area');
+
+            Prism.highlightElement(codeElement);
             
             codeContainer.appendChild(codePre);
             noteBlock.appendChild(title);
