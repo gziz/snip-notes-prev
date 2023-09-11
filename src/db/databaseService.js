@@ -100,10 +100,10 @@ class DatabaseService {
         this.saveDatabase(db);
     }
 
-    async insertNote(note_text, code_text, start_line, end_line, language_id, file_id) {
+    async insertNote(title, note_text, code_text, start_line, end_line, language_id, file_id) {
         const db = this.loadDatabase();
-        db.run("INSERT INTO notes (note_text, code_text, start_line, end_line, language_id, file_id) VALUES (?, ?, ?, ?, ?, ?);",
-            [note_text, code_text, start_line, end_line, language_id, file_id]);
+        db.run("INSERT INTO notes (title, note_text, code_text, start_line, end_line, language_id, file_id) VALUES (?, ?, ?, ?, ?, ?, ?);",
+            [title, note_text, code_text, start_line, end_line, language_id, file_id]);
         const rowId = db.exec("SELECT last_insert_rowid() as id")[0].values[0][0];
         this.saveDatabase(db);
         return rowId;
@@ -149,10 +149,10 @@ class DatabaseService {
         return rows;
     }
 
-    async updateNote(newNote) {
+    async updateNote(updatedNote) {
         const db = this.loadDatabase();
-        db.run("UPDATE notes SET note_text = ?, code_text = ?, start_line = ?, end_line = ?, file_id = ? WHERE id = ?;",
-            [newNote.note_text, newNote.code_text, newNote.start_line, newNote.end_line, newNote.file_id, newNote.id]);
+        db.run("UPDATE notes SET title = ?, note_text = ?, code_text = ?, start_line = ?, end_line = ?, file_id = ? WHERE id = ?;",
+            [updatedNote.title, updatedNote.note_text, updatedNote.code_text, updatedNote.start_line, updatedNote.end_line, updatedNote.file_id, updatedNote.id]);
         this.saveDatabase(db);
     }
 

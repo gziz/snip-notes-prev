@@ -24,17 +24,18 @@ class NoteManager {
                 const endLine = selection.end.line;
                 const codeRange = new vscode.Range(startLine, 0, endLine, editor.document.lineAt(endLine).text.length);
                 const selectedCode = editor.document.getText(codeRange);
+                const title = noteText.substring(0, 40) + (noteText.length > 40 ? "..." : "");
 
-                const noteId = await dbService.insertNote(noteText, selectedCode, startLine, endLine, languageId, fileId);
+                const noteId = await dbService.insertNote(title, noteText, selectedCode, startLine, endLine, languageId, fileId);
                 vscode.window.showInformationMessage('Snip Notes: Note succesfully created!');
                 return noteId;
             }
         }
     }
 
-    async updateNote(newNote) {
-        if (newNote.note_text) {
-            await dbService.updateNote(newNote);
+    async updateNote(updatedNote) {
+        if (updatedNote.note_text) {
+            await dbService.updateNote(updatedNote);
             vscode.window.showInformationMessage('Snip Notes: Note succesfully updated!');
             vscode.commands.executeCommand('snip-notes.refreshNotes');
         }

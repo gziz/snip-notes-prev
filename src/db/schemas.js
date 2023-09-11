@@ -18,7 +18,8 @@ async function initializeTables() {
     )`);
 
     db.run(`CREATE TABLE IF NOT EXISTS notes (
-        id INTEGER PRIMARY KEY, 
+        id INTEGER PRIMARY KEY,
+        title TEXT,
         note_text TEXT, 
         code_text TEXT,
         start_line INTEGER, 

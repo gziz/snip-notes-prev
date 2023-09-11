@@ -35,7 +35,7 @@ class NotesProvider {
                     this.refreshNotes();
                     break;
                 case "noteUpdated":
-                    notes.updateNote(message.newNote);
+                    notes.updateNote(message.updatedNote);
                     break;
                 case "rightClickedNote":
                     notes.setRightClickNote(message.noteId);
@@ -76,8 +76,7 @@ class NotesProvider {
             <link href="${stylePrismUri}" rel="stylesheet">
         </head>
         <body>
-            <h1>Snip Notes</h1>
-            <input class="search-bar" type="text" placeholder="Search notes..." />
+            <input class="note-search-bar" type="text" placeholder="Search notes..." />
             <div class="notes-div"></div>
             <script src="${scriptUri}"></script>
             <script src="${scriptPrismUri}"></script>

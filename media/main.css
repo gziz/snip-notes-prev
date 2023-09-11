@@ -1,90 +1,77 @@
 /* Overall Styling */
 body {
     margin-bottom: 200px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+        Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
 }
 
 textarea {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-        Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
     background-color: transparent; /* Transparent to match VS Code's background */
 }
 
-/* Note block Styling */
-.note-block {
-    border: 1px solid rgba(255, 255, 255, 0.1); /* Slight border to distinguish each block */
-    padding: 10px; /* Minimal padding */
-    margin-bottom: 15px; /* Space between each block */
+/* Note Container Styling */
+.note-container {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    margin-bottom: 15px;
 }
 
-.note-title {
-    border-bottom: 2px solid rgba(255, 255, 255, 0.2); /* Thick line to divide the title from content */
-    padding-bottom: 5px; /* Space below title */
-    color: #9CDCFE; /* VS Code blue for titles */
-    margin: 0 0 10px 0; /* Remove default margins for h3 and add some space below */
+.header-wrapper {
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    padding-bottom: 5px;
+    /* color: #9CDCFE; */
+    margin: 0 0 10px 0;
+    font-size: 1.17em; 
+    font-weight: bold;
 }
 
-.search-bar {
+.note-emoji {
+    padding-right: 5px;
+}
+.header-content {
+    flex: 1;
+}
+
+.note-search-bar {
     box-sizing: border-box;
     padding: 6px;
     width: 100%;
     border-radius: 1px;
-    border: 1px solid rgba(255, 255, 255, 0.3); /* Slight border to distinguish each block */
-    color: rgba(255, 255, 255, 0.9); /* Almost white text */
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: rgba(255, 255, 255, 0.9);
     background-color: transparent;
-    margin-bottom: 15px;
+    margin: 15px 0 15px 0;
 }
 
-/* Note and Code Area Styling */
-.note-area, .code-area {
-    width: 100%; /* Take full width of the container */
-    background-color: transparent; /* Transparent background */
-    border: none; /* Remove default borders */
-    color: rgba(255, 255, 255, 0.9); /* Almost white text */
-    padding: 5px 0; /* Padding top and bottom */
-    overflow-x: auto; /* Enable horizontal scrolling for content */
-    white-space: pre-wrap; /* Preserve spaces and line breaks */
+.note-content, .code-content {
+    width: 100%;
+    background-color: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.9);
+    padding: 5px 0;
+    overflow-x: auto;
+    white-space: pre-wrap;
 }
 
-.note-area {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Thin line to divide the note text from code */
+.note-content {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     min-height: 30px;
     overflow: auto;
     word-wrap: break-word;
 }
 
 .code-container {
-    overflow-x: auto; /* Enable horizontal scrolling for content */
-    overflow-y: hidden; /* Prevent vertical scrolling */
-    border: none; /* Remove any borders */
-    width: 100%; /* Make sure it takes up the full width of its parent */
+    overflow-x: auto;
+    overflow-y: hidden;
+    border: none;
+    width: 100%;
     margin-top: 5px;
 }
 
-.code-area {
-    color: #D4D4D4; /* Slightly dimmer text color for code */
-    font-family: 'Courier New', Courier, monospace; /* Monospace font for code */
-    white-space: pre; /* Respect all whitespace, including line breaks */
-    border: none; /* Remove default borders */
-    padding: 0; /* No padding */
-    margin: 0; /* No margin */
-    background-color: transparent; /* Transparent background */
-    padding-bottom: 10px;
-}
+.code-content {
+    color: #D4D4D4;
+    font-family: 'Courier New', Courier, monospace;
 
-/* Custom Scrollbar Styling */
-.note-block::-webkit-scrollbar {
-    width: 8px;
-}
-
-.note-block::-webkit-scrollbar-track {
-    background-color: rgba(255, 255, 255, 0.05); /* Very light background for scrollbar track */
-}
-
-.note-block::-webkit-scrollbar-thumb {
-    background-color: rgba(255, 255, 255, 0.2); /* Slightly darker thumb */
-    border-radius: 4px;
-}
-
-.note-block::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(255, 255, 255, 0.3);
 }

@@ -42,7 +42,7 @@
       "webview/context": [
         {
           "command": "snip-notes.deleteNote",
-          "when": "webviewId == 'snipNotes.webView' && webviewSection == 'noteBlock'"
+          "when": "webviewId == 'snipNotes.webView' && webviewSection == 'noteContainer'"
         }
       ]
     },
