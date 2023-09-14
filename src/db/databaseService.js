@@ -161,6 +161,13 @@ class DatabaseService {
         db.run("DELETE FROM notes WHERE id = ?;", [id]);
         this.saveDatabase(db);
     }
+
+    updateNoteCategory(id, category) {
+        const db = this.loadDatabase();
+        db.run("UPDATE notes SET category = ? WHERE id = ?;",
+            [category, id]);
+        this.saveDatabase(db);
+    }
 }
 
 module.exports = new DatabaseService();

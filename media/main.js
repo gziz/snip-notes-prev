@@ -62,26 +62,10 @@
         filterNotesByTerm(searchTerm);
     }
 
-    // function createNoteHeader(note) {
-    //     const headerContent = document.createElement('div');
-    //     headerContent.innerHTML = note.title;
-    //     headerContent.classList.add('header-content');
-    //     headerContent.setAttribute('contenteditable', 'true');
-
-    //     headerContent.addEventListener('blur', () => updateNoteTitle(note, headerContent.innerHTML));
-    //     headerContent.addEventListener('keydown', function(event) {
-    //         if (event.key === 'Enter' && !event.shiftKey) {
-    //             event.preventDefault();
-    //             headerContent.blur();
-    //         }
-    //     });
-    //     return headerContent;
-    // }
-
     const emojiMap = {
-        info: "ℹ️",
-        idea: "💡"
-        // ... any other categories you might have
+        note: "💡",
+        todo: "✅",
+        fix: "🔧"
     };
 
     function createNoteHeader(note) {
@@ -91,7 +75,7 @@
         // Get the emoji based on the note's category
         const emoji = document.createElement('span');
         emoji.classList.add('note-emoji');
-        emoji.textContent = emojiMap[note.category] || "💡";  // default to a note emoji
+        emoji.textContent = emojiMap[note.category] || "💡";
     
         headerWrapper.appendChild(emoji);
     

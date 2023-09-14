@@ -42,7 +42,23 @@
       "webview/context": [
         {
           "command": "snip-notes.deleteNote",
-          "when": "webviewId == 'snipNotes.webView' && webviewSection == 'noteContainer'"
+          "when": "webviewId == 'snipNotes.webView' && webviewSection == 'noteContainer'",
+          "group": "noteCRUD"
+        },
+        {
+          "command": "snip-notes.updateNoteCategoryToNote",
+          "when": "webviewId == 'snipNotes.webView' && webviewSection == 'noteContainer'",
+          "group": "noteCategories"
+        },
+        {
+          "command": "snip-notes.updateNoteCategoryToTodo",
+          "when": "webviewId == 'snipNotes.webView' && webviewSection == 'noteContainer'",
+          "group": "noteCategories"
+        },
+        {
+          "command": "snip-notes.updateNoteCategoryToFix",
+          "when": "webviewId == 'snipNotes.webView' && webviewSection == 'noteContainer'",
+          "group": "noteCategories"
         }
       ]
     },
@@ -58,6 +74,18 @@
       {
         "command": "snip-notes.refreshNotes",
         "title": "Refresh Notes"
+      },
+      {
+        "command": "snip-notes.updateNoteCategoryToNote",
+        "title": "Set as Note 💡"
+      },
+      {
+        "command": "snip-notes.updateNoteCategoryToTodo",
+        "title": "Set as TO-DO ✅"
+      },
+      {
+        "command": "snip-notes.updateNoteCategoryToFix",
+        "title": "Set as Fix Me 🔧"
       }
     ]
   },

@@ -22,10 +22,12 @@ async function initializeTables() {
         title TEXT,
         note_text TEXT, 
         code_text TEXT,
-        start_line INTEGER, 
-        end_line INTEGER, 
+        start_line INTEGER,
+        end_line INTEGER,
         language_id TEXT,
+        category TEXT,
         file_id INTEGER,
+        createdDate TEXT DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY(file_id) REFERENCES files(id)
     )`);
 

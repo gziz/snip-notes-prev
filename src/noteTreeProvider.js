@@ -3,6 +3,7 @@ const path = require('path');
 const dbService = require('./db/databaseService');
 const workspace = require('./managers/workspaceManager');
 const fileManager = require('./managers/fileManager');
+const icons = require('./icons');
 
 class NoteTreeItem extends vscode.TreeItem {
     constructor(label, collapsibleState, id, contextValue, command) {
@@ -29,6 +30,11 @@ class NoteTreeProvider {
     }
 
     getTreeItem(element) {
+        if (element.contextValue === "directory") {
+            element.iconPath = vscode.ThemeIcon.Folder;
+        } else if (element.contextValue === "file") {
+            element.iconPath = vscode.ThemeIcon.File;
+        }
         return element;
     }
 
@@ -48,12 +54,13 @@ class NoteTreeProvider {
     }
 
     async getFileChildren(fileObj) {
+
         const notes = await dbService.getNotesFromFileId(fileObj.id);
         const notesChildren = [];
         for (const note of notes) {
             // @ts-ignore
-            const noteLabel = note.note_text.substring(0, 50) + (note.note_text.length > 50 ? "..." : "");
-            const noteItem = new NoteTreeItem(noteLabel, vscode.TreeItemCollapsibleState.None);
+            const noteLabel = icons.getEmoji(note.category) + " " + note.title.substring(0, 50) + (note.title.length > 50 ? "..." : "");
+            const noteItem = new NoteTreeItem(noteLabel, vscode.TreeItemCollapsibleState.None, `note-${note.id}` , "note");
             notesChildren.push(noteItem);
         }
         return notesChildren;
@@ -76,7 +83,7 @@ class NoteTreeProvider {
                 let directoryItem = currentChildren.find(item => item.label === part);
     
                 if (!directoryItem) {
-                    directoryItem = new NoteTreeItem(part, vscode.TreeItemCollapsibleState.Expanded, undefined, 'directory');
+                    directoryItem = new NoteTreeItem(part, vscode.TreeItemCollapsibleState.Collapsed, undefined, 'directory');
                     currentChildren.push(directoryItem);
                 }
 
@@ -85,7 +92,7 @@ class NoteTreeProvider {
     
             const fileName = parts[parts.length - 1];
             const fileExists = fileManager.isFileIdInDbPath(file.id);
-            const fileItem = new NoteTreeItem(fileName, vscode.TreeItemCollapsibleState.Expanded, file.id, 'file');
+            const fileItem = new NoteTreeItem(fileName, vscode.TreeItemCollapsibleState.Expanded, `file-${file.id}`, 'file');
             fileItem.children = notesChildren;
             currentChildren.push(fileItem);
         }

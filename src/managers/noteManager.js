@@ -68,6 +68,11 @@ class NoteManager {
         dbService.deleteNote(this.rightClickedNoteId);
         vscode.commands.executeCommand('snip-notes.refreshNotes');
     }
+
+    updateCategory(category) {
+        dbService.updateNoteCategory(this.rightClickedNoteId, category);
+        vscode.commands.executeCommand('snip-notes.refreshNotes');
+    }
 }
 
 module.exports = new NoteManager();
