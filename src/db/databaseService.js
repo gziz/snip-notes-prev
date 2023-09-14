@@ -86,13 +86,6 @@ class DatabaseService {
         return "";
     }
 
-    // updateFileName(id, newName) {
-    //     const db = this.loadDatabase();
-    //     const stmt = db.prepare("UPDATE files SET name = ? WHERE id = ?;");
-    //     stmt.run(newName, id);
-    //     this.saveDatabase(db);
-    // }
-
     deleteFile(id) {
         const db = this.loadDatabase();
         const stmt = db.prepare("DELETE FROM files WHERE id = ?;");
@@ -111,13 +104,15 @@ class DatabaseService {
 
     getNoteById(id) {
         const db = this.loadDatabase();
-        return db.exec(`SELECT * FROM notes WHERE id = ${id};`);
+        const stmt = db.prepare("SELECT * FROM notes WHERE id = ?;");
+        const res = stmt.getAsObject([id]);
+        return res;
     }
 
     getNoteTextFromLine(line, fileId) {
         const db = this.loadDatabase();
-        const stmt = db.prepare("SELECT * FROM notes WHERE file_id = $file_id AND $line BETWEEN start_line AND end_line;");
-        const res = stmt.getAsObject({ $file_id: fileId, $line: line });
+        const stmt = db.prepare("SELECT * FROM notes WHERE file_id = ? AND ? BETWEEN start_line AND end_line;");
+        const res = stmt.getAsObject([fileId, line]);
         if (res.id) {
             return res.note_text.toString();
         }
@@ -126,8 +121,8 @@ class DatabaseService {
 
     async getNotesFromFileId(fileId) {
         const db = this.loadDatabase();
-        const stmt = db.prepare("SELECT * FROM notes WHERE file_id = $file_id");
-        stmt.bind({ $file_id: fileId });
+        const stmt = db.prepare("SELECT * FROM notes WHERE file_id = ?");
+        stmt.bind([fileId]);
         const rows = [];
         while (stmt.step()) {
             const row = stmt.getAsObject();
@@ -139,8 +134,8 @@ class DatabaseService {
 
     async getFilesFromWorkspaceId(workspaceId) {
         const db = this.loadDatabase();
-        const stmt = db.prepare("SELECT * FROM files WHERE workspace_id = $workspace_id");
-        stmt.bind({ $workspace_id: workspaceId });
+        const stmt = db.prepare("SELECT * FROM files WHERE workspace_id = ?");
+        stmt.bind([workspaceId]);
         const rows = [];
         while (stmt.step()) {
             const row = stmt.getAsObject();
