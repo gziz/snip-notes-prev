@@ -5,15 +5,15 @@ body {
         Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
 }
 
-textarea {
-    background-color: transparent; /* Transparent to match VS Code's background */
-}
-
 /* Note Container Styling */
 .note-container {
     border: 1px solid rgba(255, 255, 255, 0.1);
     padding: 10px;
     margin-bottom: 15px;
+}
+
+.note-content:focus, .header-content:focus {
+    outline-color: #0e639c;
 }
 
 .header-wrapper {
@@ -32,6 +32,7 @@ textarea {
 }
 .header-content {
     flex: 1;
+    padding: 5px;
 }
 
 .note-search-bar {
@@ -68,10 +69,13 @@ textarea {
     border: none;
     width: 100%;
     margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 .code-content {
     color: #D4D4D4;
     font-family: 'Courier New', Courier, monospace;
-
+    margin: 0;
+    padding: 0;
+    overflow: visible; 
 }

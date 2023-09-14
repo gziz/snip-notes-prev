@@ -34,9 +34,10 @@ pre[class*=language-] {
 } */
 
 pre[class*=language-] {
-    padding: 1em;
-    margin: .5em 0;
-    overflow: auto;
+    padding: 0;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    overflow: visible;
     /* border: .3em solid #7a6651;
     border-radius: .5em; */
     /* box-shadow: 1px 1px .5em #000 inset */
