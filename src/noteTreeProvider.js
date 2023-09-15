@@ -17,7 +17,6 @@ class NoteTreeItem extends vscode.TreeItem {
     }
 }
 
-// TreeDataProvider
 class NoteTreeProvider {
     constructor(workspaceRoot) {
         this.workspaceRoot = workspaceRoot;
@@ -54,13 +53,17 @@ class NoteTreeProvider {
     }
 
     async getFileChildren(fileObj) {
-
         const notes = await dbService.getNotesFromFileId(fileObj.id);
         const notesChildren = [];
         for (const note of notes) {
             // @ts-ignore
             const noteLabel = icons.getEmoji(note.category) + " " + note.title.substring(0, 50) + (note.title.length > 50 ? "..." : "");
-            const noteItem = new NoteTreeItem(noteLabel, vscode.TreeItemCollapsibleState.None, `note-${note.id}` , "note");
+            const noteItem = new NoteTreeItem(
+                noteLabel,
+                vscode.TreeItemCollapsibleState.None,
+                `note-${note.id}`,
+                "note",
+                this.focusOnNoteCommand(fileObj, note));
             notesChildren.push(noteItem);
         }
         return notesChildren;
@@ -92,11 +95,13 @@ class NoteTreeProvider {
     
             const fileName = parts[parts.length - 1];
             const fileExists = fileManager.isFileIdInDbPath(file.id);
-            const fileItem = new NoteTreeItem(fileName, vscode.TreeItemCollapsibleState.Expanded, `file-${file.id}`, 'file');
+            const fileUri = vscode.Uri.file(path.join(this.workspaceRoot, file.relative_path));
+
+            const fileItem = new NoteTreeItem(fileName, vscode.TreeItemCollapsibleState.Expanded, `file-${file.id}`, 'file', this.openFileCommand(file))
+
             fileItem.children = notesChildren;
             currentChildren.push(fileItem);
         }
-    
         return root;
     }
 
@@ -116,8 +121,22 @@ class NoteTreeProvider {
                 this.compressPath(node.children);
             }
         }
-    
         return root;
+    }
+    openFileCommand(fileObj){
+        return {
+            command: 'snip-notes.openFile',
+            title: '',
+            arguments: [fileObj.relative_path]
+        };
+    }
+
+    focusOnNoteCommand(fileObj, noteObj) {
+        return {
+            command: 'snip-notes.focusOnNote',
+            title: '',
+            arguments: [fileObj.relative_path, noteObj.id]
+        };
     }
 }
 module.exports = NoteTreeProvider;

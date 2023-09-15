@@ -6,6 +6,7 @@ const notes = require('./managers/noteManager');
 const file = require('./managers/fileManager');
 const NotesProvider = require('./noteProvider');
 const NoteTreeProvider = require('./noteTreeProvider');
+const path = require('path');
 
 /**
  * @param {vscode.ExtensionContext} context
@@ -30,7 +31,8 @@ async function activate(context) {
         await notes.prepareToCreateNote();
         const newNoteId = await notes.createNote();
         provider.focusWebview();
-        provider.refreshNotes(newNoteId);
+        await provider.refreshNotes();
+        provider.focusOnNote(newNoteId);
         treeDataProvider.refresh();
     }));
     
@@ -42,6 +44,20 @@ async function activate(context) {
     context.subscriptions.push(vscode.commands.registerCommand('snip-notes.deleteNote', async function () {  
         notes.deleteNote();
         vscode.commands.executeCommand('snip-notes.refreshNotes');
+    }));
+
+    context.subscriptions.push(vscode.commands.registerCommand('snip-notes.openFile', async function (fileRelativePath) {
+        const workspacePath = workspace.getWorkspacePath();
+        if (workspacePath) {
+            let filePath = path.join(workspacePath, fileRelativePath);
+            let fileUri = vscode.Uri.file(filePath);
+            vscode.commands.executeCommand('vscode.open', fileUri);
+        }
+    }));
+
+    context.subscriptions.push(vscode.commands.registerCommand('snip-notes.focusOnNote', async function (fileRelativePath, noteId) {  
+        vscode.commands.executeCommand('snip-notes.openFile', fileRelativePath);
+        provider.focusOnNote(noteId);
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand('snip-notes.updateNoteCategoryToNote', async function (event) {  
@@ -58,6 +74,8 @@ async function activate(context) {
         notes.updateCategory('fix')
         vscode.commands.executeCommand('snip-notes.refreshNotes');
     }));
+
+
 
     /* Listeners */
     vscode.window.onDidChangeActiveTextEditor(async () => {

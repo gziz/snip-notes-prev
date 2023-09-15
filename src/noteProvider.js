@@ -95,6 +95,12 @@ class NotesProvider {
     async deleteNote() {
         dbService.deleteNote();
     }
+
+    async focusOnNote(noteId) {
+        if (this._view) {
+            this._view.webview.postMessage({ type: 'focusOnNote', noteId: noteId });
+        }
+    }
 }
 
 module.exports = NotesProvider;

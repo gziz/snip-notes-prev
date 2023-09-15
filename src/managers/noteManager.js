@@ -12,13 +12,13 @@ class NoteManager {
     async createNote() {
         let editor = vscode.window.activeTextEditor;
         if (editor) {
-            
+
             const fileId = file.getFileId()
             const languageId = editor.document.languageId;
 
             const selection = editor.selection;
             const noteText = await vscode.window.showInputBox({ prompt: 'Enter your note:' });
-            
+
             if (noteText) {
                 const startLine = selection.start.line;
                 const endLine = selection.end.line;
@@ -73,6 +73,7 @@ class NoteManager {
         dbService.updateNoteCategory(this.rightClickedNoteId, category);
         vscode.commands.executeCommand('snip-notes.refreshNotes');
     }
+
 }
 
 module.exports = new NoteManager();

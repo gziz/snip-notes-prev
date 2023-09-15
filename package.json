@@ -4,7 +4,7 @@
   "description": "Note taking for vs-code",
   "publisher": "gziz",
   "repository": "https://github.com/gziz/snip-notes.git",
-  "version": "0.0.4",
+  "version": "0.0.6",
   "engines": {
     "vscode": "^1.81.0"
   },
@@ -21,7 +21,7 @@
         {
           "id": "snipNotes",
           "title": "Snip Notes",
-          "icon": "resources/snip-notes.svg"
+          "icon": "resources/icons/snip-notes.svg"
         }
       ]
     },
@@ -65,7 +65,7 @@
     "commands": [
       {
         "command": "snip-notes.createNote",
-        "title": "Create Note"
+        "title": "Snip Notes: Create Note"
       },
       {
         "command": "snip-notes.deleteNote",

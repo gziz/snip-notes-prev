@@ -11,9 +11,11 @@
         const message = event.data;
         switch (message.type) {
             case 'refreshNotes':
-                const newNoteId = message.newNoteId || null;
-                refreshNotes(message.notes, newNoteId);
+                refreshNotes(message.notes);
                 break;
+            case 'focusOnNote':
+                const noteId = message.noteId;
+                focusOnNote(noteId);
         }
     }
 
@@ -40,7 +42,16 @@
         return null;
     }
 
-    function refreshNotes(notes, focusNoteId=null) {
+    function focusOnNote(noteId) {
+        const noteToFocus = document.getElementById(`note-${noteId}`);
+        if (noteToFocus) {
+            noteToFocus.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
+        }
+    }
+    function refreshNotes(notes) {
         const notesDiv = document.querySelector('.notes-div');
         notesDiv.textContent = '';
 
@@ -48,15 +59,6 @@
             const noteContainer = createNoteContainer(note);
             notesDiv.appendChild(noteContainer);
 
-            if (focusNoteId) {
-                const noteToFocus = document.getElementById(`note-${focusNoteId}`);
-                if (noteToFocus) {
-                    noteToFocus.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'center'
-                    });
-                }
-            }
         }
         const searchTerm = document.querySelector('.note-search-bar').value.toLowerCase();
         filterNotesByTerm(searchTerm);
@@ -155,7 +157,6 @@
     function updateNoteContent(note, newContent) {
         if (newContent !== note.note_text) {
             note.note_text = newContent;
-            console.log(note);
             vscode.postMessage({ type: 'noteUpdated', updatedNote: note });
         }
     }
