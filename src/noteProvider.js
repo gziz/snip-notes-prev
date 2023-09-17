@@ -53,10 +53,8 @@ class NotesProvider {
         }
     }
 
-    focusWebview() {
-        if (this._view) {
-            this._view.show(true);
-        }
+    async focusWebview() {
+        vscode.commands.executeCommand('snipNotes.webView.focus');
     }
 
 	_getHtmlForWebview(webview) {

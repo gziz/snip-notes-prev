@@ -30,7 +30,7 @@ async function activate(context) {
     context.subscriptions.push(vscode.commands.registerCommand('snip-notes.createNote', async function () {  
         await notes.prepareToCreateNote();
         const newNoteId = await notes.createNote();
-        provider.focusWebview();
+        await provider.focusWebview();
         await provider.refreshNotes();
         provider.focusOnNote(newNoteId);
         treeDataProvider.refresh();
@@ -74,7 +74,6 @@ async function activate(context) {
         notes.updateCategory('fix')
         vscode.commands.executeCommand('snip-notes.refreshNotes');
     }));
-
 
 
     /* Listeners */

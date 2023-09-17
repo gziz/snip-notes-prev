@@ -30,7 +30,7 @@
         {
           "type": "webview",
           "id": "snipNotes.webView",
-          "name": "Block Notes"
+          "name": "Notes"
         },
         {
           "id": "snipNotes.treeView",
@@ -59,6 +59,16 @@
           "command": "snip-notes.updateNoteCategoryToFix",
           "when": "webviewId == 'snipNotes.webView' && webviewSection == 'noteContainer'",
           "group": "noteCategories"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "snip-notes.deleteNote",
+          "when": "false"
+        },
+        {
+          "command": "snip-notes.refreshNotes",
+          "when": "false"
         }
       ]
     },
