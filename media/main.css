@@ -12,7 +12,7 @@ body {
     margin-bottom: 15px;
 }
 
-.note-content:focus, .header-content:focus {
+.note-content:focus, .header-content:focus, .note-search-bar:focus {
     outline-color: #0e639c;
 }
 
