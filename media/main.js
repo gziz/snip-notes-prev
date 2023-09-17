@@ -87,6 +87,7 @@
         headerContent.classList.add('header-content');
         headerContent.setAttribute('contenteditable', 'true');
     
+        headerContent.addEventListener('paste', (e) => handlePaste(e, headerContent));
         headerContent.addEventListener('blur', () => updateNoteTitle(note, headerContent.innerHTML));
         headerContent.addEventListener('keydown', function(event) {
             if (event.key === 'Enter' && !event.shiftKey) {
@@ -105,7 +106,8 @@
         noteContent.innerHTML = note.note_text;
         noteContent.classList.add('note-content');
         noteContent.setAttribute('contenteditable', 'true');
-
+        
+        noteContent.addEventListener('paste', (e) => handlePaste(e, noteContent));
         noteContent.addEventListener('blur', () => updateNoteContent(note, noteContent.innerHTML));
         noteContent.addEventListener('keydown', function(event) {
             if (event.key === 'Enter' && !event.shiftKey) {
@@ -194,4 +196,28 @@
 
         return lines.map(line => line.substring(minIndent)).join('\n');
     }
+
+    function handlePaste(event, targetElement) {
+        event.preventDefault();
+    
+        const text = (event.originalEvent || event).clipboardData.getData('text/plain');
+    
+        // Insert text manually
+        const selection = window.getSelection();
+        if (selection.rangeCount) {
+            const range = selection.getRangeAt(0);
+            range.deleteContents();
+            range.insertNode(document.createTextNode(text));
+            
+            // Move the caret to the end of the inserted text
+            range.collapse(false);
+            const sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(range);
+        } else {
+            // If there's no selection, simply append the text at the end
+            targetElement.textContent += text;
+        }
+    }
+    
 })();
