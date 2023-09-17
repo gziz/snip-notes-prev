@@ -14,7 +14,8 @@ class NoteManager {
         if (editor) {
 
             const fileId = file.getFileId()
-            const languageId = editor.document.languageId;
+            const languageId = this.formatLanguageId(editor.document.languageId);
+
 
             const selection = editor.selection;
             const noteText = await vscode.window.showInputBox({ prompt: 'Enter your note:' });
@@ -74,6 +75,15 @@ class NoteManager {
         vscode.commands.executeCommand('snip-notes.refreshNotes');
     }
 
+    formatLanguageId(vscodeLanguageId) {
+        // Function to match prism.js languageId
+        const mapping = {
+            'typescriptreact': 'tsx',
+            'javascriptreact': 'jsx'
+        };
+        return mapping[vscodeLanguageId] || vscodeLanguageId;
+    }
+    
 }
 
 module.exports = new NoteManager();
