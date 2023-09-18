@@ -94,7 +94,7 @@ class NoteTreeProvider {
             }
     
             const fileName = parts[parts.length - 1];
-            const fileExists = fileManager.isFileIdInDbPath(file.id);
+            const fileExists = fileManager.isFileInDb(file.relative_path);
             const fileUri = vscode.Uri.file(path.join(this.workspaceRoot, file.relative_path));
 
             const fileItem = new NoteTreeItem(fileName, vscode.TreeItemCollapsibleState.Expanded, `file-${file.id}`, 'file', this.openFileCommand(file))

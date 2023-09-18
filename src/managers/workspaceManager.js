@@ -34,7 +34,7 @@ class WorkspaceManager {
     if (!this.isInWorkspace()) return;
 
     const workspacePath = vscode.workspace.workspaceFolders[0].uri.fsPath;
-    const workspaceName = path.basename(workspacePath);
+    const workspaceName = vscode.workspace.name;
     let workspaceId = dbService.getWorkspaceIdByName(workspaceName);
     
     if (!workspaceId) {
@@ -50,7 +50,7 @@ class WorkspaceManager {
     if (!this.isInWorkspace()) return;
 
     const workspacePath = vscode.workspace.workspaceFolders[0].uri.fsPath;
-    const workspaceName = path.basename(workspacePath);
+    const workspaceName = vscode.workspace.name;
     const workspaceId = dbService.getWorkspaceIdByName(workspaceName);
     
     return workspaceId != null;

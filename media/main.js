@@ -55,6 +55,8 @@
         const notesDiv = document.querySelector('.notes-div');
         notesDiv.textContent = '';
 
+        notes.sort((a, b) => a.start_line - b.start_line);
+
         for (const note of notes) {
             const noteContainer = createNoteContainer(note);
             notesDiv.appendChild(noteContainer);
