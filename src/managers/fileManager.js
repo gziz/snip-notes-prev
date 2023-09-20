@@ -6,7 +6,6 @@ const fs = require('fs');
 
 class FileManager {
   constructor() {
-    // this.fileRelativePath = null;
     this.fileId = null;
     this.currFileNotes = null;
   }

@@ -89,7 +89,6 @@ async function activate(context) {
     async function activateHelper() {
         if (!workspace.isInWorkspace()) return;
     
-        await dbService.initializeSQLJs();
         if (!workspace.isWorkspaceRegistered()) {
             return;
         }

@@ -3,7 +3,7 @@ const path = require('path');
 const dbService = require('./db/databaseService');
 const workspace = require('./managers/workspaceManager');
 const fileManager = require('./managers/fileManager');
-const icons = require('./icons');
+const icons = require('./utils/icons');
 
 class NoteTreeItem extends vscode.TreeItem {
     constructor(label, collapsibleState, id, contextValue, command) {

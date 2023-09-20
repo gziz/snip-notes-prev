@@ -1,5 +1,5 @@
 const vscode = require('vscode');
-const path = require('path');
+const infoMessages = require('../utils/infoMessages');
 const dbService = require('../db/databaseService');
 
 class WorkspaceManager {
@@ -36,14 +36,19 @@ class WorkspaceManager {
     const workspacePath = vscode.workspace.workspaceFolders[0].uri.fsPath;
     const workspaceName = vscode.workspace.name;
     let workspaceId = dbService.getWorkspaceIdByName(workspaceName);
+    let workspacePathFromDb = dbService.getWorkspacePathByName(workspaceName);
+    if (workspacePath !== workspacePathFromDb) {
+      vscode.window.showInformationMessage(infoMessages.diffWorkspacePath(workspaceName))
+    }
     
     if (!workspaceId) {
       dbService.insertWorkspace(workspaceName, workspacePath);
       workspaceId = dbService.getWorkspaceIdByName(workspaceName);
+      this.updateWorkspaceName(workspaceName);
+      this.updateWorkspacePath(workspacePath);
+      this.updateWorkspaceID(workspaceId);
     }
-    this.updateWorkspaceName(workspaceName);
-    this.updateWorkspacePath(workspacePath);
-    this.updateWorkspaceID(workspaceId);
+
   }
 
   isWorkspaceRegistered() {

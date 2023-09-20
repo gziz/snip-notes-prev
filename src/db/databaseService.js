@@ -52,11 +52,18 @@ class DatabaseService {
         this.saveDatabase(db);
     }
 
-    getWorkspaceIdByName(name, path) {
+    getWorkspaceIdByName(name) {
         const db = this.loadDatabase();
         const stmt = db.prepare("SELECT * FROM workspaces WHERE name = $name");
         const res = stmt.getAsObject({ $name: name });
         return res.id;
+    }
+
+    getWorkspacePathByName(name) {
+        const db = this.loadDatabase();
+        const stmt = db.prepare("SELECT * FROM workspaces WHERE name = $name");
+        const res = stmt.getAsObject({ $name: name });
+        return res.path;
     }
 
     insertFile(relativePath, workspaceId) {
