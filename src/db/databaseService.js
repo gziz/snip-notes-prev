@@ -10,7 +10,7 @@ class DatabaseService {
     }
 
     setGlobalStoragePath(globalStorageUri) {
-        const globalPath = globalStorageUri.path;
+        const globalPath = globalStorageUri.fsPath;
         if (!fs.existsSync( globalPath )){
             fs.mkdirSync( globalPath );
         }
