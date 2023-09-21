@@ -46,8 +46,11 @@ body {
     margin: 15px 0 15px 0;
 }
 
-.note-content, .code-content {
+.note-content {
     width: 100%;
+}
+
+.note-content, .code-content, .line-numbers {
     background-color: transparent;
     border: none;
     color: rgba(255, 255, 255, 0.9);
@@ -64,6 +67,7 @@ body {
 }
 
 .code-container {
+    display: flex;
     overflow-x: auto;
     overflow-y: hidden;
     border: none;
@@ -72,10 +76,17 @@ body {
     margin-bottom: 5px;
 }
 
-.code-content {
-    color: #D4D4D4;
+.code-content, .line-numbers {
     font-family: 'Courier New', Courier, monospace;
     margin: 0;
     padding: 0;
     overflow: visible; 
+}
+
+.code-content {
+    padding-left: 10px; /* Gap between line numbers and code */
+}
+.line-numbers {
+    padding-right: 10px; /* Gap between line numbers and code */
+    border-right: 1px solid rgba(255, 255, 255, 0.1); /* Optional border between line numbers and code */
 }

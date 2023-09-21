@@ -125,18 +125,34 @@
         const codeContainer = document.createElement('div');
         codeContainer.classList.add('code-container');
     
-        const codePre = document.createElement('pre');
+        codeContainer.appendChild(createLineNumbersDiv(note.start_line, note.end_line));
+
         const codeElement = document.createElement('code');
         codeElement.classList.add(`language-${note.language_id}`);
         codeElement.textContent = normalizeCodeIndentation(note.code_text);
+        Prism.highlightElement(codeElement);
 
+        const codePre = document.createElement('pre');
         codePre.appendChild(codeElement);
         codePre.classList.add('code-content');
 
-        Prism.highlightElement(codeElement);
-
         codeContainer.appendChild(codePre);
         return codeContainer;
+    }
+
+    function createLineNumbersDiv(startLine, endLine) {
+        const lineNumbersPre = document.createElement('pre');
+        lineNumbersPre.classList.add('line-numbers');
+    
+        const lineNumbersCode = document.createElement('code');
+        let lineNumbersText = "";
+        for(let i = startLine; i <= endLine; i++) {
+            lineNumbersText += i + "\n";
+        }
+        lineNumbersCode.textContent = lineNumbersText.trim();
+        Prism.highlightElement(lineNumbersCode);
+        lineNumbersPre.appendChild(lineNumbersCode);
+        return lineNumbersPre;
     }
 
     function createNoteContainer(note) {
