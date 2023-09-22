@@ -80,7 +80,6 @@
         const emoji = document.createElement('span');
         emoji.classList.add('note-emoji');
         emoji.textContent = emojiMap[note.category] || "💡";
-    
         headerWrapper.appendChild(emoji);
     
         // Create title div
@@ -88,7 +87,8 @@
         headerContent.innerHTML = note.title;
         headerContent.classList.add('header-content');
         headerContent.setAttribute('contenteditable', 'true');
-    
+
+        // Make the title editable
         headerContent.addEventListener('paste', (e) => handlePaste(e, headerContent));
         headerContent.addEventListener('blur', () => updateNoteTitle(note, headerContent.innerHTML));
         headerContent.addEventListener('keydown', function(event) {
@@ -100,6 +100,18 @@
         
         headerWrapper.appendChild(headerContent);
         
+        const optionsIcon = document.createElement('span');
+        optionsIcon.innerHTML = '⋮';
+        optionsIcon.classList.add('header-options-icon');
+        optionsIcon.setAttribute('data-vscode-context', '{"preventDefaultContextMenuItems": true }');
+        optionsIcon.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.target.dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, clientX: e.clientX, clientY: e.clientY }));
+            e.stopPropagation();
+        });
+
+        headerWrapper.appendChild(optionsIcon);
+
         return headerWrapper;
     }
 
@@ -147,7 +159,7 @@
         const lineNumbersCode = document.createElement('code');
         let lineNumbersText = "";
         for(let i = startLine; i <= endLine; i++) {
-            lineNumbersText += i + "\n";
+            lineNumbersText += (i+1) + "\n"; // api returns 0-indexed
         }
         lineNumbersCode.textContent = lineNumbersText.trim();
         Prism.highlightElement(lineNumbersCode);
@@ -161,7 +173,7 @@
         noteContainer.id = `note-${note.id}`;
         noteContainer.setAttribute('data-vscode-context', '{"webviewSection": "noteContainer", "preventDefaultContextMenuItems": true}');
         
-        noteContainer.addEventListener('click', () => onNoteClick(note));
+        noteContainer.addEventListener('click', (event) => onNoteClick(note, event));
 
         noteContainer.appendChild(createNoteHeader(note));
         noteContainer.appendChild(createNoteContent(note));
@@ -170,8 +182,10 @@
         return noteContainer;
     }
 
-    function onNoteClick(note) {
-        vscode.postMessage({ type: 'noteClicked', value: note.start_line });
+    function onNoteClick(note, event) {
+        if (event.target.nodeName.toLowerCase() === 'code'){
+            vscode.postMessage({ type: 'noteClicked', value: note.start_line });
+        }
     }
 
     function updateNoteContent(note, newContent) {

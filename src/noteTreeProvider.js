@@ -29,9 +29,7 @@ class NoteTreeProvider {
     }
 
     getTreeItem(element) {
-        if (element.contextValue === "directory") {
-            element.iconPath = vscode.ThemeIcon.Folder;
-        } else if (element.contextValue === "file") {
+        if (element.contextValue === "file") {
             element.iconPath = vscode.ThemeIcon.File;
         }
         return element;

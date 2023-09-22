@@ -78,7 +78,7 @@ body {
 
 .code-content, .line-numbers {
     font-family: 'Courier New', Courier, monospace;
-    margin: 0;
+    margin-bottom: 5px;
     padding: 0;
     overflow: visible; 
 }
@@ -88,5 +88,12 @@ body {
 }
 .line-numbers {
     padding-right: 10px; /* Gap between line numbers and code */
-    border-right: 1px solid rgba(255, 255, 255, 0.1); /* Optional border between line numbers and code */
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    user-select: none;
+}
+
+.header-options-icon {
+    cursor: pointer;
+    padding-left: 10px;
+    font-size: 1.2em; /* Adjust size as needed */
 }
