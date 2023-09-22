@@ -44,10 +44,10 @@ class WorkspaceManager {
     if (!workspaceId) {
       dbService.insertWorkspace(workspaceName, workspacePath);
       workspaceId = dbService.getWorkspaceIdByName(workspaceName);
-      this.updateWorkspaceName(workspaceName);
-      this.updateWorkspacePath(workspacePath);
-      this.updateWorkspaceID(workspaceId);
     }
+    this.updateWorkspaceName(workspaceName);
+    this.updateWorkspacePath(workspacePath);
+    this.updateWorkspaceID(workspaceId);
 
   }
 
